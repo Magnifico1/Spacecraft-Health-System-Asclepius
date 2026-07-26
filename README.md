@@ -1,4 +1,4 @@
-# Spacecraft-Health-System-Asclepius
+# Spacecraft Health System Asclepius
 Artificial Intelligence-assisted Spacecraft Health Monitoring and Decision Support System
 
 By enhancing autonomy, fault-detection, and operational decision-making, AI-driven technologies have the potential to improve spacecraft resilience and expand the capabilities of space missions. While space missions have historically employed deterministic rule-based thresholding methods to detect anomalous telemetry data, this technique has certain limitations such as the time cost required to manually set and tune the thresholds for countless individual variables, and as such, AI-assisted methods are becoming essential for maximising operational effectiveness in complex missions. 
