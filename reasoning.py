@@ -198,11 +198,7 @@ Be concise, objective, and technically precise.
 
     response = requests.post(
         OLLAMA_URL,
-        json={
-            "model": MODEL_NAME,
-            "prompt": prompt,
-            "stream": False
-        }
+        json={"model": MODEL_NAME, "prompt": prompt, "stream": False}
     )
 
     response.raise_for_status()
@@ -211,13 +207,9 @@ Be concise, objective, and technically precise.
 
 
 # Main
-
 if __name__ == "__main__":
-
     events = pd.read_csv(OUTPUT_DIR / "mission_events.csv")
-
     report = generate_reasoning(events)
-
     print("\n" + "=" * 60)
     print("MISSION REASONING REPORT")
     print("=" * 60)
