@@ -4,7 +4,7 @@ from core.config import DATA_DIR
 
 def anomaly_flag(df, subsystem):
     """
-    Safely retrieve ML anomaly status.
+    Retrieve ML anomaly status.
     Returns False if subsystem is not active in this mission.
     """
     column = f"{subsystem}_anomaly_status"
@@ -77,7 +77,7 @@ def health_status(df):
     df['propulsion_rule_count'] = (
         (df['fuel_level'] < 50).astype(int) +
         (df['thruster_temp'] > 40).astype(int) +
-        (df['thrust_level'] > 0.9).astype(int))
+        (df['thrust_level'] > .9).astype(int))
 
     df['propulsion_rule_issue'] = df['propulsion_rule_count']>0
 
@@ -168,9 +168,7 @@ def health_status(df):
             (df["surface_speed"] < 1).astype(int))
         
         df['mobility_rule_issue'] = df['mobility_rule_count']>0
-
         df["mobility_ml_issue"] = anomaly_flag(df, "mobility")
-
 
     #-----------------------------------------------------------------
     # Deep Space mission-specific telemetry
@@ -234,7 +232,6 @@ def health_status(df):
 
     if "mobility_rule_issue" in df.columns:
         df["mobility_issue"] = (df["mobility_rule_issue"] > 0)
-    
 
     #------------------------------------------------------------------
     # Subsystem health classification
@@ -259,7 +256,6 @@ def health_status(df):
 
     if "mobility_rule_count" in df.columns:
         df["mobility_status"] = subsystem_status(df["mobility_rule_count"])
-
 
     #------------------------------------------------------------------
     # Aggregate system health
@@ -296,7 +292,6 @@ def health_status(df):
             row.get("mobility_ml_issue", False)
         ])
 
-
         # -----------------------------
         # Overall spacecraft health
         # -----------------------------
@@ -323,8 +318,7 @@ def health_status(df):
     df["spacecraft_status"] = df.apply(classify_system_health, axis=1)
 
     return df
-
-
+    
 
 if __name__ == '__main__':
     df = pd.read_csv(DATA_DIR / 'telemetry_data_with_anomaly_status.csv')
