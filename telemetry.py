@@ -34,9 +34,9 @@ def generate_nominal_core_telemetry(num_points=5000):
     # Propulsion subsystem
     fuel_level = 100 - .001*time + np.random.normal(0, .1, num_points) #in percent
     thruster_temp = 30 + np.random.normal(0, .5, num_points)
-    thrust_level = np.random.choice([0, 0.2, 0.5, 1.0],
+    thrust_level = np.random.choice([0, .2, .5, 1.0],
                                     size=num_points,
-                                    p=[0.5, 0.2, 0.25, 0.05]
+                                    p=[.5, .2, .25, .05]
                                     )
 
     # On-board Computer subsystem
@@ -112,13 +112,13 @@ def generate_specific_telemetry(df, mission):
         df["heater_power"] = (40 + np.random.normal(0, 3, n))
 
         # Communication
-        df["earth_visibility"] = np.random.choice([0, 1], size=n, p=[0.4, 0.6])
+        df["earth_visibility"] = np.random.choice([0, 1], size=n, p=[.4, .6])
         df["link_margin"] = (20 + np.random.normal(0, 2, n))
 
         # Mobility
-        df['wheel_slip_ratio'] = np.random.normal(0.1, 0.03, n)
+        df['wheel_slip_ratio'] = np.random.normal(0.1, .03, n)
         df['terrain_slope'] = np.random.normal(0, 5, n)
-        df["surface_speed"] = (2.5 + np.random.normal(0,0.2,n))
+        df["surface_speed"] = (2.5 + np.random.normal(0,.2,n))
 
     # Deep Space Mission
 
@@ -132,14 +132,14 @@ def generate_specific_telemetry(df, mission):
         df["signal_to_noise_ratio"] = (50 + np.random.normal(0, 3, n))
 
         # AOCS
-        df["trajectory_error"] = (0.1 + np.random.normal(0, 0.02, n))
+        df["trajectory_error"] = (.1 + np.random.normal(0, .02, n))
 
         # Propulsion
-        df["delta_v_remaining"] = (np.linspace(100, 70, n) + np.random.normal(0, 0.5, n))
+        df["delta_v_remaining"] = (np.linspace(100, 70, n) + np.random.normal(0, .5, n))
     
         # OBC 
         df["processor_temperature"] = (35 + np.random.normal(0, 1, n))
-        df["memory_integrity"] = (100 + np.random.normal(0, 0.5, n))
+        df["memory_integrity"] = (100 + np.random.normal(0, .5, n))
 
     else:
         raise ValueError(f"Unknown mission profile: {mission}")
@@ -246,7 +246,7 @@ def inject_faults(df):
 
     apply_ramp(df, 'fuel_level', start, end, 0, -18)
     apply_ramp(df, 'thruster_temp', start, end, 0, 20)
-    apply_ramp(df, 'thrust_level', start, end, 0, 0.5)
+    apply_ramp(df, 'thrust_level', start, end, 0, .5)
 
     # On-board Computer subsystem
     start, end = get_window_indices(windows['obc'])
@@ -260,31 +260,31 @@ def inject_faults(df):
     # Power subsystem
     start = 800
     end = 950
-    apply_ramp(df, 'battery_voltage', start, end, 0, -0.4)
+    apply_ramp(df, 'battery_voltage', start, end, 0, -.4)
 
     start = 1400
     end = 1450
-    apply_ramp(df, 'battery_current', start, end, 0, 0.15)
+    apply_ramp(df, 'battery_current', start, end, 0, .15)
 
     # Thermal subsystem
     start = 1200
     end = 1450
-    apply_ramp(df,'bus_temp',start,end,0,5)
+    apply_ramp(df,'bus_temp', start, end, 0, 5)
 
     # AOCS
     start = 1600
     end = 1700
-    apply_ramp(df,'gyro_drift',start,end,    0,0.025)
+    apply_ramp(df,'gyro_drift', start, end, 0, .025)
 
     # Commumnication
     start = 200
     end = 350
-    apply_ramp(df,'communication_signal',start,end,0,-4)
+    apply_ramp(df,'communication_signal', start, end, 0, -4)
 
     # Propulsion
     start = 2700
     end = 2800
-    apply_ramp(df, 'thrust_level', start, end, 0, 0.25)
+    apply_ramp(df, 'thrust_level', start, end, 0, .25)
 
     # OBC
     start = 3900
@@ -312,43 +312,43 @@ def inject_eo_faults(df):
 
     # Power
     # Camera overheating
-    start = int(n * 0.25)
+    start = int(n*.25)
     end = int(start+350)
-    apply_ramp(df,"camera_temperature",start,end,0,15)
+    apply_ramp(df, "camera_temperature", start, end, 0, 15)
 
     # Image quality degradation
-    start = int(n * 0.45)
+    start = int(n*.45)
     end = int(start+150)
-    apply_ramp(df,"image_quality",start,end,0,-40)
+    apply_ramp(df, "image_quality", start, end, 0, -40)
 
-    start = int(n * 0.80)
-    end = int(start + 100)
-    apply_ramp(df,"image_quality",start,end,0,-10)
+    start = int(n*.80)
+    end = int(start+100)
+    apply_ramp(df, "image_quality", start, end, 0, -10)
 
     # Imaging power increase
-    start = int(n * 0.65)
+    start = int(n*.65)
     end = int(start+150)
-    apply_ramp(df,"imaging_power",start,end,0,40)
+    apply_ramp(df, "imaging_power", start, end, 0, 40)
 
     # AOCS
     # Pointing drifts
-    start = int(n * 0.35)
+    start = int(n*.35)
     end = int(start+15)
-    apply_ramp(df,"pointing_error",start,end,0,1.5)
+    apply_ramp(df, "pointing_error", start, end, 0, 1.5)
 
     # Attitude fault
-    start = int(n * 0.55)
+    start = int(n*.55)
     end = int(start+150)
-    apply_ramp(df,"attitude_accuracy",start,end,0,-10)
+    apply_ramp(df, "attitude_accuracy", start, end, 0, -10)
 
     # Communication
     # Reduced downlink capability
-    start = int(n * 0.75)
+    start = int(n*.75)
     end = int(start+150)
-    apply_ramp(df,"downlink_rate",start,end,0,-25)
+    apply_ramp(df, "downlink_rate", start, end, 0, -25)
 
     # Ground station outage
-    start = int(n * 0.85)
+    start = int(n*.85)
     end = int(start+20)
     df.loc[start:end,"ground_station_visibility"] = 0
 
@@ -359,61 +359,61 @@ def inject_lunar_faults(df):
 
     # Power
     # battery degradation
-    start = int(n * 0.72)
-    end = int(start + 75)
+    start = int(n*.72)
+    end = int(start+75)
     df.loc[start:end, "battery_state_of_charge"] = 66
 
     # Radiator degradation
-    start = int(n * 0.60)
-    end = int(start + 100)
-    apply_ramp(df,"radiator_temperature",start,end,0,10)
+    start = int(n*.60)
+    end = int(start+100)
+    apply_ramp(df, "radiator_temperature", start, end, 0, 10)
 
     # Heater overuse
-    start = int(n * 0.55)
+    start = int(n*.55)
     end = int(start+170)
-    apply_ramp(df,"heater_power",start,end,0,30)
+    apply_ramp(df, "heater_power", start, end, 0, 30)
 
     # Communication
     # Communication window degradation
-    start = int(n * 0.70)
+    start = int(n*.70)
     end = int(start+50)
     df.loc[start:end-1, "earth_visibility"] = 0
-    apply_ramp(df,"link_margin",start,end,0,-15)
+    apply_ramp(df, "link_margin", start, end, 0, -15)
 
-    start = int(n * 0.85)
-    end = int(start + 60)
-    apply_ramp(df,"link_margin",start,end,0,-7)
+    start = int(n*.85)
+    end = int(start+60)
+    apply_ramp(df, "link_margin", start, end, 0, -7)
 
     # Propulsion
-    start = int(n * 0.65)
-    end = int(start + 100)
-    df.loc[start:end,"thrust_level"] = 1
+    start = int(n*.65)
+    end = int(start+100)
+    df.loc[start:end, "thrust_level"] = 1
 
     # Fuel consumption anomaly
-    start = int(n * 0.45)
-    end = int(start + 150)
-    apply_ramp(df,"fuel_level",start,end,0,-45)
+    start = int(n*.45)
+    end = int(start+150)
+    apply_ramp(df, "fuel_level", start, end, 0, -45)
 
     # Mobility
-    start = int(n * 0.80)
-    end = start + 150
-    apply_ramp(df,"wheel_slip_ratio",start,end,0,0.55)
+    start = int(n*.80)
+    end = start+150
+    apply_ramp(df, "wheel_slip_ratio", start, end, 0, .55)
 
-    start = int(n * 0.30)
-    end = start + 100
-    apply_ramp(df,"wheel_slip_ratio",start,end,0,0.35)
+    start = int(n*.30)
+    end = start+100
+    apply_ramp(df, "wheel_slip_ratio", start, end, 0, .35)
 
-    start = int(n * .80)
-    end = int(start + 200)
-    apply_ramp(df, 'terrain_slope', start, end,0, 30)
+    start = int(n*.80)
+    end = int(start+200)
+    apply_ramp(df, 'terrain_slope', start, end, 0, 30)
 
-    start = int(n * .05)
-    end = int(start + 200)
-    apply_ramp(df, 'terrain_slope', start, end,0, 35)
+    start = int(n*.05)
+    end = int(start+200)
+    apply_ramp(df, 'terrain_slope', start, end, 0, 35)
 
-    start = int(n * 0.80)
-    end = int(start + 200)
-    apply_ramp(df,"surface_speed",start,end,0,-2)
+    start = int(n*.80)
+    end = int(start+200)
+    apply_ramp(df, "surface_speed", start, end, 0, -2)
 
 
 def inject_deep_space_faults(df):
@@ -421,39 +421,39 @@ def inject_deep_space_faults(df):
     n = len(df)
 
     # RTG degradation
-    start = int(n * 0.30)
+    start = int(n*.30)
     end = int(start+400)
-    apply_ramp(df,"rtg_output",start,end,0,-50)
+    apply_ramp(df, "rtg_output", start, end, 0, -50)
 
     # Processor overheating
-    start = int(n * 0.50)
+    start = int(n*.50)
     end = int(start+200)
-    apply_ramp(df,"processor_temperature",start,end,0,15)
+    apply_ramp(df, "processor_temperature", start, end, 0, 15)
 
     # Signal degradation
-    start = int(n * 0.65)
+    start = int(n*0.65)
     end = int(start+40)
-    apply_ramp(df,"signal_to_noise_ratio",start,end,0,-20)
+    apply_ramp(df, "signal_to_noise_ratio", start, end, 0, -20)
 
     # Trajectory drift
-    start = int(n * 0.80)
+    start = int(n*.80)
     end = int(start+200)
-    apply_ramp(df,"trajectory_error",start,end,0,5)
+    apply_ramp(df, "trajectory_error", start, end, 0, 5)
 
     # Antenna failure
-    start = int(n * 0.35)
+    start = int(n*.35)
     end = int(start+400)
     df.loc[start:end, "antenna_status"] = 0
 
     # Delta-v depletion
-    start = int(n * 0.70)
+    start = int(n*.70)
     end = int(start+350)
     apply_ramp(df, "delta_v_remaining", start, end, 0, -40)
 
     # Memory integrity degradation
-    start = int(n * 0.55)
+    start = int(n*.55)
     end = int(start+150)
-    apply_ramp(df,"memory_integrity",start,end,0,-8)
+    apply_ramp(df, "memory_integrity", start, end, 0, -8)
 
 
 # Output data
