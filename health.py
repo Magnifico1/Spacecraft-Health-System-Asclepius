@@ -319,7 +319,7 @@ def health_status(df):
 
     return df
     
-
+# Main
 if __name__ == '__main__':
     df = pd.read_csv(DATA_DIR / 'telemetry_data_with_anomaly_status.csv')
     print(df.columns)
