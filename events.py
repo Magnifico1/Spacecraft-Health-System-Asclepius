@@ -93,7 +93,6 @@ rules = {
         ("surface_speed", "min", 1, "Mobility degradation")]
 }
 
-
 def classify_confidence(rule_detected, ml_detected):
     if ml_detected and rule_detected != ["Unknown anomaly"]:
         return "High"
@@ -207,9 +206,7 @@ def extract_events(df):
         if anomaly_col not in df_slice.columns:
             return False
 
-        return (
-            df_slice[anomaly_col] == "Anomaly"
-        ).any()
+        return (df_slice[anomaly_col] == "Anomaly").any()
 
 
     # -------------------------------------------------
@@ -258,19 +255,11 @@ def extract_events(df):
 
                         start = active[subsystem]
 
-                        df_slice = df.iloc[
-                            start["start_index"]:i-2
-                        ]
+                        df_slice = df.iloc[start["start_index"]:i-2]
 
-                        rule_detected = evaluate_rules(
-                            df_slice,
-                            subsystem
-                        )
+                        rule_detected = evaluate_rules(df_slice, subsystem)
 
-                        ml_detected = evaluate_ml(
-                            df_slice,
-                            subsystem
-                        )
+                        ml_detected = evaluate_ml(df_slice, subsystem)
 
                         rule_flag = rule_detected != ["Unknown anomaly"]
 
@@ -279,10 +268,7 @@ def extract_events(df):
                             normal_counter[subsystem] = 0
                             continue
 
-                        confidence = classify_confidence(
-                            rule_detected,
-                            ml_detected
-                        )
+                        confidence = classify_confidence(rule_detected, ml_detected)
 
                         events.append({
                             "subsystem": subsystem,
@@ -422,7 +408,7 @@ def merge_events(events_df, max_gap=30):
 
     return pd.DataFrame(merged_events)
 
-# Run code
+# Main
 if __name__ == '__main__':
     df = pd.read_csv(DATA_DIR / 'telemetry_data_with_health_status.csv')
     events_df = extract_events(df)
