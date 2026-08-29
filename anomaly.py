@@ -99,6 +99,9 @@ def apply_anomaly_models(df, models):
 
     return df
 
+
+# Main
+
 if __name__ == '__main__':
     nominal_mission_telemetry = pd.read_csv(DATA_DIR / 'nominal_mission_telemetry.csv')
     mission_telemetry = pd.read_csv(DATA_DIR / 'mission_telemetry.csv')
