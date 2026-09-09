@@ -50,7 +50,7 @@ subsystem_features = {
     
     # Lunar Exploration only
     'mobility': [
-        'wheel_slip_ratio', 'terrain_slope' 'surface_speed']
+        'wheel_slip_ratio', 'terrain_slope', 'surface_speed']
 }
 
 #----------------------------------------------------------------------------
